@@ -1,0 +1,22 @@
+from sqlalchemy import Column, String,Integer,Date,Boolean,DateTime,Text,Float
+from chihuo.dbConnect import Base
+
+"""这个类定义了用户类型，之后会在数据库创建相应的表"""
+class user(Base):
+    __tablename__ = 'user'
+
+    userId = Column(Integer(),primary_key = True)
+    userName = Column(String(16),unique=True,nullable=False)
+    password = Column(String(16),nullable=False)
+    nickName = Column(String(30),nullable=False)
+    emailAddress = Column(String(20),unique=True,default=None)
+    phoneNumber = Column(Integer(11),unique=True,default=None)
+    followerCount = Column(Integer(5),default=0,nullable=False)
+    selfIntroduction = Column(String(255),nullable=True,default=None)
+    #初始化
+    def __init__(self,userName,password,nickName):
+        self.userName = userName
+        self.password = password
+        self.nickName = nickName
+
+
