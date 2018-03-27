@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker,scoped_session
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
-dbEngine = create_engine('mysql://root:123456@localhost:3306/dataManage?charset=utf8')
+dbEngine = create_engine('mysql://root:123456@localhost:3306/chihuo?charset=utf8')
 dbSession = sessionmaker(bind = dbEngine)
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,

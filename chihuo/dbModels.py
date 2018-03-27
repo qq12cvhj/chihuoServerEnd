@@ -1,3 +1,4 @@
+#coding:utf-8
 from sqlalchemy import Column, String,Integer,Date,Boolean,DateTime,Text,Float
 from chihuo.dbConnect import Base
 
@@ -10,13 +11,13 @@ class user(Base):
     password = Column(String(16),nullable=False)
     nickName = Column(String(30),nullable=False)
     emailAddress = Column(String(20),unique=True,default=None)
-    phoneNumber = Column(Integer(11),unique=True,default=None)
-    followerCount = Column(Integer(5),default=0,nullable=False)
+    phoneNumber = Column(String(11),unique=True,default=None)
+    followerCount = Column(Integer,default=0)
     selfIntroduction = Column(String(255),nullable=True,default=None)
+    headIcon = Column(String(127),nullable=True,default=None)
     #初始化
     def __init__(self,userName,password,nickName):
         self.userName = userName
         self.password = password
         self.nickName = nickName
-
 
