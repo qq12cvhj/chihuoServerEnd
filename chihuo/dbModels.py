@@ -16,8 +16,8 @@ class user(Base):
     selfIntroduction = Column(String(255),nullable=True,default=None)
     headIcon = Column(String(127),nullable=True,default=None)
     #初始化
-    def __init__(self,userName,password,nickName):
-        self.userName = userName
-        self.password = password
-        self.nickName = nickName
+    def __init__(self,username=None,psw=None,nn=None):
+        self.userName = username
+        self.password = psw
+        self.nickName = nn
 

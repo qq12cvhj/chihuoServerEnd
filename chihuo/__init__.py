@@ -13,6 +13,7 @@ from dbConnect import db_session
 from dbModels import *
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '123456'
 #app.config.from_object('chihuo.config')
 #app.config.from_object(Config())
 app.register_blueprint(aboutHome)
