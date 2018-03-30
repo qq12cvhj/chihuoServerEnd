@@ -9,7 +9,7 @@ class user(Base):
     userId = Column(Integer(),primary_key = True)
     userName = Column(String(16),unique=True,nullable=False)
     password = Column(String(16),nullable=False)
-    nickName = Column(String(30),nullable=False)
+    nickName = Column(String(30),nullable=False,unique=True)
     emailAddress = Column(String(20),unique=True,default=None)
     phoneNumber = Column(String(11),unique=True,default=None)
     followerCount = Column(Integer,default=0)
@@ -20,4 +20,5 @@ class user(Base):
         self.userName = username
         self.password = psw
         self.nickName = nn
+
 
