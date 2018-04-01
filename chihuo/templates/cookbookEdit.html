@@ -11,7 +11,8 @@
 	<script type="text/javascript" src="/static/dist/js/lib/zepto.touch.js"></script>
 	<script type="text/javascript" src="/static/dist/js/wangEditor-mobile.js"></script>
 <script>
-    function callSubmit() {
+    function callSubmit( authorId ) {
+       document.getElementById("foodAuthorIdInput").value = authorId;
        document.getElementById("editFoodForm").submit();
        alert("创建成功");
        return 'yes'
@@ -30,7 +31,9 @@
     <div class="container">
         <p >请编辑美食</p>
         <form method="post" id="editFoodForm" action="/createNewFood">
-             <input name="foodNameInput" class="form-control">
+             <input name="foodNameInput" class="form-control" placeholder="菜品名称">
+             <input type="hidden" name="foodAuthorIdInput" id="foodAuthorIdInput">
+             <input name="foodTypeIdInput" class="form-control" placeholder="菜系ID">
         <hr style="height: 3px" style="color: #111111"/>
              <textarea
                      name="foodDetailInput"

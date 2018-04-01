@@ -40,6 +40,10 @@ def GetImage():
 def createNewFood():
     foodName = request.form['foodNameInput']
     foodDetail = request.form['foodDetailInput']
+    foodAuthorId = int(request.form['foodAuthorIdInput'])
+    foodTypeId = request.form['foodTypeIdInput']
     print foodName
     print foodDetail
+    print type(foodAuthorId)
+    print foodTypeId
     return render_template('cookbookEdit.html',title='编辑菜谱')
