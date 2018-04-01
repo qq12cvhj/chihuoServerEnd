@@ -8,7 +8,7 @@ aboutCookbook = Blueprint('aboutCookbook',__name__)
 
 @aboutCookbook.route('/editCookbook',methods=['GET'])
 def editCookbook():
-    return render_template('cookbookEdit.html',title='aaa')
+    return render_template('cookbookEdit.html',title='编辑菜谱')
 
 def getRandFilename():
     today = datetime.date.today()
@@ -42,4 +42,4 @@ def createNewFood():
     foodDetail = request.form['foodDetailInput']
     print foodName
     print foodDetail
-    return "<script>alert('成功');</script>"
+    return render_template('cookbookEdit.html',title='编辑菜谱')

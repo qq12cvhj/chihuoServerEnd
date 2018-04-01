@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/static/dist/css/wangEditor-mobile.css">
+</head>
+<script type="text/javascript" src="/static/dist/js/lib/zepto.js"></script>
+	<script type="text/javascript" src="/static/dist/js/lib/zepto.touch.js"></script>
+	<script type="text/javascript" src="/static/dist/js/wangEditor-mobile.js"></script>
+<script>
+    function callSubmit() {
+       document.getElementById("editFoodForm").submit();
+       alert("创建成功");
+       return 'yes'
+    }
+</script>
+	<script type="text/javascript">
+		$(function () {
+			// ___E 三个下划线
+			var editor = new ___E('textarea1')
+			editor.config.uploadImgUrl = 'http://192.168.1.110:5000/upload';
+			editor.init();
+		});
+
+	</script>
+<body>
+    <div class="container">
+        <p >请编辑美食</p>
+        <form method="post" id="editFoodForm" action="/createNewFood">
+             <input name="foodNameInput" class="form-control">
+        <hr style="height: 3px" style="color: #111111"/>
+             <textarea
+                     name="foodDetailInput"
+                     id="textarea1" class="form-control"
+                     style="width:100%;height:100%;">
+                 <p> 请编辑菜品信息
+                    <br/><br/><br/><br/><br/>
+                 </p>
+		     </textarea>
+            <hr style="height: 3px" style="color: #111111"/>
+        </form>
+	</div>
+</body>
+</html>
