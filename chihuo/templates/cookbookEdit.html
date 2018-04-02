@@ -14,7 +14,6 @@
     function callSubmit( authorId ) {
        document.getElementById("foodAuthorIdInput").value = authorId;
        document.getElementById("editFoodForm").submit();
-       alert("创建成功");
        return 'yes'
     }
 </script>
@@ -22,7 +21,7 @@
 		$(function () {
 			// ___E 三个下划线
 			var editor = new ___E('textarea1')
-			editor.config.uploadImgUrl = 'http://192.168.1.110:5000/upload';
+			editor.config.uploadImgUrl = 'http://192.168.1.101:5000/upload';
 			editor.init();
 		});
 

@@ -32,7 +32,8 @@ class food(Base):
     foodDetail = Column(LONGTEXT)
     starCount = Column(Integer,default=0)
 
-    def __init__(self,name=None,authorId=None,typeId=None):
+    def __init__(self,name=None,authorId=None,typeId=None,detail = None):
         self.foodName = name
         self.foodAuthorId = authorId
         self.foodTypeId = typeId
+        self.foodDetail = detail

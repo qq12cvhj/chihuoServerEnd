@@ -4,6 +4,8 @@ import os
 import datetime
 import random
 from flask import Blueprint, render_template, request, Response
+from ..dbModels import food,user
+from ..dbConnect import db_session
 aboutCookbook = Blueprint('aboutCookbook',__name__)
 
 @aboutCookbook.route('/editCookbook',methods=['GET'])
@@ -27,7 +29,7 @@ def GetImage():
                     if not os.path.isdir('chihuo/static/imgsUpload/'):
                         os.mkdir('chihuo/static/imgsUpload')
                     file.save(os.path.join('chihuo/static/imgsUpload/',filename))
-                    result = os.path.join('static','imgsUpload/',filename)
+                    result = os.path.join('/static','imgsUpload/',filename)
                     res =  Response(result)
                     res.headers["ContentType"] = "text/html"
                     res.headers["Charset"] = "utf-8"
@@ -46,4 +48,22 @@ def createNewFood():
     print foodDetail
     print type(foodAuthorId)
     print foodTypeId
-    return render_template('cookbookEdit.html',title='编辑菜谱')
+    newfood = food(foodName,foodAuthorId,foodTypeId,foodDetail)
+    try:
+        db_session.add(newfood)
+        db_session.commit()
+        db_session.close()
+        return render_template('cookbookEdit.html', title='编辑菜谱')
+    except(BaseException):
+        return "<script>alert('上传失败，请重试');</script>"
+
+@aboutCookbook.route("/getFoodInfo<foodId>")
+def getfoodInfo(foodId):
+    foodInfos = db_session.query(food).filter(food.foodId == foodId).all()
+    if foodInfos == []:
+        return "<script>alert('请求失败,请重试');</script>"
+    else:
+        foodInfo = foodInfos[0]
+        authorId = foodInfo.foodAuthorId
+        authorName = db_session.query(user).filter(user.userId == authorId).all()[0].nickName
+        return render_template('foodInfoShow.html',foodInfo = foodInfo,authorName = authorName)
