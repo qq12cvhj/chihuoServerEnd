@@ -2,9 +2,10 @@
 import os
 
 import datetime
+import time
 import random
 from flask import Blueprint, render_template, request, Response
-from ..dbModels import food,user
+from ..dbModels import food,user,foodType
 from ..dbConnect import db_session
 aboutCookbook = Blueprint('aboutCookbook',__name__)
 
@@ -54,8 +55,9 @@ def createNewFood():
         db_session.commit()
         db_session.close()
         return render_template('cookbookEdit.html', title='编辑菜谱')
-    except(BaseException):
-        return "<script>alert('上传失败，请重试');</script>"
+    except Exception,e:
+        print e
+        return "<script>alert('上传失败，菜品已存在,或菜系ID错误（菜系ID为整数）');</script>"
 
 @aboutCookbook.route("/getFoodInfo<foodId>")
 def getfoodInfo(foodId):
@@ -67,3 +69,19 @@ def getfoodInfo(foodId):
         authorId = foodInfo.foodAuthorId
         authorName = db_session.query(user).filter(user.userId == authorId).all()[0].nickName
         return render_template('foodInfoShow.html',foodInfo = foodInfo,authorName = authorName)
+
+@aboutCookbook.route("/addNewFoodType",methods=['POST'])
+def addNewFoodType():
+    foodTypeInput = request.form['foodTypeInput']
+    foodDescInput = request.form['foodDescInput']
+    print foodTypeInput
+    print foodDescInput
+    newFoodType = foodType(foodTypeInput,foodDescInput)
+    try:
+        db_session.add(newFoodType)
+        db_session.commit()
+        db_session.close()
+        return "0"
+    except Exception ,e:
+        print e
+        return "-1"

@@ -37,3 +37,14 @@ class food(Base):
         self.foodAuthorId = authorId
         self.foodTypeId = typeId
         self.foodDetail = detail
+
+class foodType(Base):
+    __tablename__ = 'foodType'
+
+    foodTypeId = Column(Integer,primary_key= True)
+    foodTypeName = Column(String(16),unique=True,nullable=False)
+    foodTypeDesc = Column(LONGTEXT)
+
+    def __init__(self,name=None,desc=None):
+        self.foodTypeName = name
+        self.foodTypeDesc = desc
