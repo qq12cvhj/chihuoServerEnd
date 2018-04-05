@@ -11,7 +11,8 @@ aboutCookbook = Blueprint('aboutCookbook',__name__)
 
 @aboutCookbook.route('/editCookbook',methods=['GET'])
 def editCookbook():
-    return render_template('cookbookEdit.html',title='编辑菜谱')
+    foodTypeList = getFoodTypeLIst()
+    return render_template('cookbookEdit.html',title='编辑菜谱',foodTypeList = foodTypeList)
 
 def getRandFilename():
     today = datetime.date.today()
@@ -39,6 +40,10 @@ def GetImage():
                     print(e)
                     return "error|"+str(e)
 
+def getFoodTypeLIst():
+    foodTypeList = db_session.query(foodType).all()
+    return foodTypeList
+
 @aboutCookbook.route('/createNewFood',methods=['POST'])
 def createNewFood():
     foodName = request.form['foodNameInput']
@@ -54,10 +59,14 @@ def createNewFood():
         db_session.add(newfood)
         db_session.commit()
         db_session.close()
-        return render_template('cookbookEdit.html', title='编辑菜谱')
+        #foodTypeList = getFoodTypeLIst()
+        #return render_template('cookbookEdit.html', title='编辑菜谱',foodTypeList = foodTypeList)
+        return "<script>alert('创建成功，请返回上一层');</script>"
     except Exception,e:
         print e
-        return "<script>alert('上传失败，菜品已存在,或菜系ID错误（菜系ID为整数）');</script>"
+        return "<script>alert('创建失败，菜品已存在。请退出重试');</script>"
+
+
 
 @aboutCookbook.route("/getFoodInfo<foodId>")
 def getfoodInfo(foodId):

@@ -14,7 +14,7 @@
     function callSubmit( authorId ) {
        document.getElementById("foodAuthorIdInput").value = authorId;
        document.getElementById("editFoodForm").submit();
-       return 'yes'
+       return "yes"
     }
 </script>
 	<script type="text/javascript">
@@ -28,12 +28,18 @@
 	</script>
 <body>
     <div class="container">
-        <p >请编辑美食</p>
+        <div class="form-group"><label >请编辑您要添加的美食吧！</label></div>
         <form method="post" id="editFoodForm" action="/createNewFood">
              <input name="foodNameInput" class="form-control" placeholder="菜品名称">
              <input type="hidden" name="foodAuthorIdInput" id="foodAuthorIdInput">
              <br/><br/>
-             <input name="foodTypeIdInput" class="form-control" placeholder="菜系ID">
+             {#<input name="foodTypeIdInput" class="form-control" placeholder="菜系ID">#}
+             <div class="form-group"><label >添加菜系（若列表为空或未找到想要的菜系,请返回上一级添加菜系）</label></div>
+             <select name = "foodTypeIdInput" form="editFoodForm" class="form-control">
+                 {%  for foodType in foodTypeList %}
+                    <option value="{{ foodType.foodTypeId }} "  class="form-control">{{ foodType.foodTypeName }}</option>
+                 {% endfor %}
+             </select>
         <hr style="height: 3px" style="color: #111111"/>
              <textarea
                      name="foodDetailInput"
