@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="/static/dist/css/wangEditor-mobile.css">
+</head>
+    <style>
+		*{margin: 0;padding: 0;}
+		#article-body{
+			width: 100%;
+			min-height: 300px;
+			box-sizing: border-box;
+			padding: 10px;
+    		color: #444;
+		}
+	</style>
+    <!-- 引入jQuery -->
+    <script src="/static/eleditor/jquery.min.js"></script>
+	<!-- 引入百度上传插件 -->
+    <script src="/static/eleditor/webuploader.min.js"></script>
+    <!-- 插件核心 -->
+    <script src="/static/eleditor/Eleditor.js"></script>
+
+
+
+<body>
+    <div class="container">
+        <div class="form-group"><label >请编辑您要添加的美食吧！</label></div>
+        <form method="post" id="editFoodForm" action="/createNewFood">
+             <input name="foodNameInput" class="form-control" placeholder="菜品名称">
+             <input type="hidden" name="foodAuthorIdInput" id="foodAuthorIdInput">
+             <br/><br/>
+
+             <div class="form-group"><label >添加菜系（若列表为空或未找到想要的菜系,请返回上一级添加菜系）</label></div>
+             <select name = "foodTypeIdInput" form="editFoodForm" class="form-control">
+                 {%  for foodType in foodTypeList %}
+                    <option value="{{ foodType.foodTypeId }} "  class="form-control">{{ foodType.foodTypeName }}</option>
+                 {% endfor %}
+             </select>
+             <input name="foodDetailInput" id="foodDetailInput" type="hidden"/>
+        </form>
+        <br/><br/>
+        <hr style="height:10px;color: #111111"  />
+        <div class="form-group">
+            <!-- 内容编辑区域 -->
+            <div id="article-body">
+
+            </div>
+            <script>
+                /*实例化一个编辑器*/
+                var artEditor = new Eleditor({
+                                        el: '#article-body',
+                                        upload:{
+                                            server: '/uploadImage',
+                                            fileSizeLimit: 5,
+                                            formName:"image",
+                                            compress:{
+                                                width:400,
+                                                height:400
+                                            }
+                                        }
+                                    });
+            </script>
+            <script>
+                function callSubmit( authorId ) {
+                   var _content = artEditor.getContent();
+                   document.getElementById("foodDetailInput").value = _content;
+                   document.getElementById("foodAuthorIdInput").value = authorId;
+                   document.getElementById("editFoodForm").submit();
+                   return "yes"
+                }
+            </script>
+        </div>
+
+	</div>
+</body>
+</html>

@@ -4,7 +4,7 @@ import os
 import datetime
 import time
 import random
-from flask import Blueprint, render_template, request, Response, json
+from flask import Blueprint, render_template, request, Response, json, jsonify
 from ..dbModels import food, user, foodType
 from ..dbConnect import db_session
 
@@ -15,6 +15,7 @@ aboutCookbook = Blueprint('aboutCookbook', __name__)
 def editCookbook():
     foodTypeList = getFoodTypeLIst()
     return render_template('cookbookEdit.html', title='编辑菜谱', foodTypeList=foodTypeList)
+
 
 
 def getRandFilename():
@@ -43,6 +44,37 @@ def GetImage():
         except Exception, e:
             print(e)
             return "error|" + str(e)
+
+@aboutCookbook.route("/uploadImage",methods=['POST'])
+def uploadImg():
+    file = request.files['image']
+    if file == None:
+        jsonInfo = {
+            "status":0,
+            "msg":"上传失败"
+        }
+        return jsonify(jsonInfo)
+    else:
+        try:
+            filename = getRandFilename() + '.jpg'
+            if not os.path.isdir('chihuo/static/imgsUpload/'):
+                os.mkdir('chihuo/static/imgsUpload')
+            file.save(os.path.join('chihuo/static/imgsUpload/', filename))
+            jsonInfo = {
+                "status": 1,
+                "url": "http://192.168.1.101:5000/static/imgsUpload/"+filename+""
+            }
+            return jsonify(jsonInfo)
+        except Exception, e:
+            jsonInfo = {
+                "status": 0,
+                "msg": "error|" + str(e)
+            }
+            return jsonify(jsonInfo)
+@aboutCookbook.route("/cbEdit")
+def cbEdit():
+    foodTypeList = getFoodTypeLIst()
+    return render_template('cbedit_eleditor.html',foodTypeList=foodTypeList)
 
 
 def getFoodTypeLIst():
