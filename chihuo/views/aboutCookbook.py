@@ -5,7 +5,7 @@ import datetime
 import time
 import random
 from flask import Blueprint, render_template, request, Response, json, jsonify
-from ..dbModels import food, user, foodType
+from ..dbModels import food, user, foodType,foodStar
 from ..dbConnect import db_session
 
 aboutCookbook = Blueprint('aboutCookbook', __name__)
@@ -167,3 +167,42 @@ def foodTypeList():
     print json.dumps(typeJsonList)
     print typeJsonList
     return json.dumps(typeJsonList)
+
+aboutCookbook.route("/getStarCount<foodId>", methods = ['GET'])
+def getStarCount(foodId):
+    return None
+
+@aboutCookbook.route("/starStatus<foodId>/<userId>",methods=['GET'])
+def starStatus(foodId,userId):
+    try:
+        status = db_session.query(foodStar).filter(foodStar.userId == userId and foodStar.foodId == foodId).first()
+        if status == None:
+            print 0
+            return "0"
+        else:
+            print 1
+            return "1"
+    except Exception, e:
+        print e
+        return "0"
+
+@aboutCookbook.route("/starOrCancel<foodId>/<userId>")
+def starOrCancel(foodId,userId):
+    try:
+        status = db_session.query(foodStar).filter(foodStar.userId == userId and foodStar.foodId == foodId).first()
+        if status == None:
+            fs = foodStar(userId,foodId)
+            db_session.add(fs)
+            db_session.commit()
+            db_session.close()
+            print 1
+            return "1"
+        else:
+            db_session.delete(status)
+            db_session.commit()
+            db_session.close()
+            print 0
+            return "0"
+    except Exception,e:
+        print e
+        return "-1"

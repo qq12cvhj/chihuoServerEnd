@@ -62,3 +62,18 @@ class foodTypeView(ModelView):
 
     def __init__(self,modelType,session,**kwargs):
         super(foodTypeView, self).__init__(modelType, session, **kwargs)
+
+class foodStarView(ModelView):
+    column_list = (
+        'foodStarId',
+        'foodId',
+        'userId'
+    )
+    column_labels = {
+        'foodStarId':u'点赞ID',
+        'foodId':u'菜品ID',
+        'userId':u'用户ID'
+    }
+
+    def __init__(self,modelType,session,**kwargs):
+        super(foodStarView, self).__init__(modelType, session, **kwargs)

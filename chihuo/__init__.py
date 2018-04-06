@@ -1,12 +1,12 @@
 #coding: utf-8
 from flask import Flask, Config
 
-from chihuo.dbViews import userView,foodView,foodTypeView
+from chihuo.dbViews import userView,foodView,foodTypeView,foodStarView
 from views.aboutHome import aboutHome
 from views.aboutCookbook import aboutCookbook
 from views.aboutFriends import aboutFriends
 from views.aboutMe import aboutMe
-from views.aboutUser import  aboutUser
+from views.aboutUser import aboutUser
 from flask_admin import Admin
 from dbConnect import db_session
 from dbModels import *
@@ -25,7 +25,8 @@ admin = Admin(app, name='吃货APP后台数据库管理系统', template_mode='b
 def models_import_admin():
     admin.add_view(userView(user,db_session,name='用户管理'))
     admin.add_view(foodView(food,db_session,name='菜品管理'))
-    admin.add_view(foodTypeView(foodType,db_session,name='菜系管理'))
+    admin.add_view(foodTypeView(foodType, db_session, name='菜系管理'))
+    admin.add_view(foodStarView(foodStar, db_session, name='菜系点赞管理'))
 
 
 

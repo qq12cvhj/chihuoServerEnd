@@ -48,3 +48,13 @@ class foodType(Base):
     def __init__(self,name=None,desc=None):
         self.foodTypeName = name
         self.foodTypeDesc = desc
+
+class foodStar(Base):
+    __tablename__ = 'foodStar'
+
+    foodStarId = Column(Integer,primary_key= True)
+    foodId = Column(Integer)
+    userId = Column(Integer)
+    def __init__(self,userid = None,foodid = None):
+        self.foodId = foodid
+        self.userId = userid
