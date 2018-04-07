@@ -45,36 +45,6 @@ def GetImage():
             print(e)
             return "error|" + str(e)
 
-@aboutCookbook.route("/uploadImage",methods=['POST'])
-def uploadImg():
-    file = request.files['image']
-    if file == None:
-        jsonInfo = {
-            "status":0,
-            "msg":"上传失败"
-        }
-        return jsonify(jsonInfo)
-    else:
-        try:
-            filename = getRandFilename() + '.jpg'
-            if not os.path.isdir('chihuo/static/imgsUpload/'):
-                os.mkdir('chihuo/static/imgsUpload')
-            file.save(os.path.join('chihuo/static/imgsUpload/', filename))
-            jsonInfo = {
-                "status": 1,
-                "url": "http://192.168.1.101:5000/static/imgsUpload/"+filename+""
-            }
-            return jsonify(jsonInfo)
-        except Exception, e:
-            jsonInfo = {
-                "status": 0,
-                "msg": "error|" + str(e)
-            }
-            return jsonify(jsonInfo)
-@aboutCookbook.route("/cbEdit")
-def cbEdit():
-    foodTypeList = getFoodTypeLIst()
-    return render_template('cbedit_eleditor.html',foodTypeList=foodTypeList)
 
 
 def getFoodTypeLIst():
@@ -200,6 +170,7 @@ def starOrCancel(foodId,userId):
         else:
             db_session.delete(status)
             db_session.commit()
+
             db_session.close()
             print 0
             return "0"

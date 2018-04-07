@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <title>Title</title>
+</head>
+    <style>
+		*{margin: 0;padding: 0;}
+		#article-body{
+			width: 100%;
+			min-height: 300px;
+			box-sizing: border-box;
+			padding: 10px;
+    		color: #444;
+		}
+	</style>
+    <!-- 引入jQuery -->
+    <script src="/static/eleditor/jquery.min.js"></script>
+	<!-- 引入百度上传插件 -->
+    <script src="/static/eleditor/webuploader.min.js"></script>
+    <!-- 插件核心 -->
+    <script src="/static/eleditor/Eleditor.js"></script>
+
+
+
+<body>
+    <div class="container">
+        <form method="post" id="editFoodForm" action="/createNewFood">
+             <input name="shareTitleInput" id="shareTitleInput" class="form-control" placeholder="请输入标题">
+             <input type="hidden" name="shareAuthorIdInput" id="shareAuthorIdInput">
+             <input name="shareDetailInput" id="shareDetailInput" type="hidden"/>
+        </form>
+        <hr style="height:10px;color: #111111"  />
+        <div class="form-group">
+            <!-- 内容编辑区域 -->
+            <div id="article-body">/
+
+            </div>
+            <script>
+                /*实例化一个编辑器*/
+                var artEditor = new Eleditor({
+                                        el: '#article-body',
+                                        upload:{
+                                            server: '/uploadImage',
+                                            fileSizeLimit: 5,
+                                            formName:"image"
+                                        }
+                                    });
+            </script>
+        </div>
+	</div>
+</body>
+<script>
+                function callPublish(authorId){
+                    var _shareDetail = artEditor.getContent();
+                    document.getElementById("shareAuthorIdInput").value = authorId;
+                    document.getElementById("shareDetailInput").value = _shareDetail;
+                    var detailData = {
+                        data:JSON.stringify({
+                            "shareTitle":$("#shareTitleInput").val(),
+                            "shareAuthorId":$("#shareAuthorIdInput").val(),
+                            "shareDetail":$("#shareDetailInput").val()
+                        })
+                    };
+                    var status = 1;
+                     $.ajax(
+                    {
+                        url:"/pubShare",
+                        type: 'POST',
+                        data: detailData,
+                        success: function (msg) {
+                            if(msg == '0'){
+                                status = "0";
+                            }
+                            else {
+                                status = "-1";
+                            }
+                        }
+                    });
+                    return status;
+                }
+            </script>
+</html>
