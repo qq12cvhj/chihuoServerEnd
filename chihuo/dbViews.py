@@ -77,3 +77,19 @@ class foodStarView(ModelView):
 
     def __init__(self,modelType,session,**kwargs):
         super(foodStarView, self).__init__(modelType, session, **kwargs)
+
+class shareView(ModelView):
+    column_list = (
+        'shareId',
+        'shareAuthorId',
+        'shareDetail',
+        'pubTime'
+    )
+    column_labels = {
+        'shareId':u'分享ID',
+        'shareAuthorId':u'作者ID',
+        'shareDetail':u'分享详情',
+        'pubTime':u'发表时间'
+    }
+    def __init__(self,modelType,session,**kwargs):
+        super(shareView, self).__init__(modelType, session, **kwargs)

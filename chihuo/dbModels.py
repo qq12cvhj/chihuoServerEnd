@@ -1,5 +1,5 @@
 #coding:utf-8
-from sqlalchemy import Column, String,Integer
+from sqlalchemy import Column, String, Integer, DateTime
 from sqlalchemy.dialects.mysql import LONGTEXT
 from chihuo.dbConnect import Base
 
@@ -58,3 +58,16 @@ class foodStar(Base):
     def __init__(self,userid = None,foodid = None):
         self.foodId = foodid
         self.userId = userid
+
+class share(Base):
+    __tablename__ = 'share'
+
+    shareId = Column(Integer,primary_key=True)
+    shareAuthorId = Column(Integer,nullable=False)
+    shareDetail = Column(LONGTEXT)
+    pubTime = Column(DateTime,nullable=False)
+
+    def __init__(self,authotid=None,detail=None,pubtime=None):
+        self.shareAuthorId = authotid
+        self.shareDetail = detail
+        self.pubTime = pubtime

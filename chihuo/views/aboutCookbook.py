@@ -117,6 +117,15 @@ def food2json(f):
         "foodAuthor":foodAuthor,
         "foodName":f.foodName
     }
+@aboutCookbook.route("/getDesignList<authorId>")
+def getDesignList(authorId):
+    foodList = db_session.query(food).filter(food.foodAuthorId == authorId).all()
+    foodJsonList = []
+    for f in foodList:
+        foodJsonList.append(food2json(f))
+    print json.dumps(foodJsonList)
+    return json.dumps(foodJsonList)
+
 @aboutCookbook.route("/getFoodList<typeId>")
 def getFoodList(typeId):
     foodList = db_session.query(food).filter(food.foodTypeId == typeId).all()

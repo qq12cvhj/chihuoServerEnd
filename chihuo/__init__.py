@@ -1,7 +1,7 @@
 #coding: utf-8
 from flask import Flask, Config
 
-from chihuo.dbViews import userView,foodView,foodTypeView,foodStarView
+from chihuo.dbViews import userView,foodView,foodTypeView,foodStarView,shareView
 from views.aboutHome import aboutHome
 from views.aboutCookbook import aboutCookbook
 from views.aboutFriends import aboutFriends
@@ -27,7 +27,7 @@ def models_import_admin():
     admin.add_view(foodView(food,db_session,name='菜品管理'))
     admin.add_view(foodTypeView(foodType, db_session, name='菜系管理'))
     admin.add_view(foodStarView(foodStar, db_session, name='菜系点赞管理'))
-
+    admin.add_view(shareView(share,db_session,name='分享管理'))
 
 
 

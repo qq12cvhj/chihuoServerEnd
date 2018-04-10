@@ -1,7 +1,12 @@
 #coding=utf-8
 import os
-from flask import Blueprint, request, jsonify, render_template, json
-from aboutCookbook import getRandFilename, getFoodTypeLIst
+
+import datetime
+from flask import Blueprint, request, jsonify, render_template, json, Response
+from aboutCookbook import getRandFilename
+from ..dbConnect import db_session
+from ..dbModels import share
+datetimeRegx = '%Y-%m-%d %H:%M:%S'
 
 aboutUser = Blueprint('aboutUser',__name__)
 
@@ -38,6 +43,7 @@ def cbEdit():
 
 @aboutUser.route("/pubShare",methods=['POST'])
 def pubShare():
+    msg = ""
     try:
         shareData = json.loads(request.form.get('data'))
         shareTitle = shareData['shareTitle']
@@ -46,7 +52,20 @@ def pubShare():
         print shareTitle
         print shareAuthorId
         print shareDetail
-        return str('0')
-    except Exception,e:
+        pubtime = datetime.datetime.now().strftime(datetimeRegx)
+        newShare = share(int(shareAuthorId), shareDetail, pubtime)
+        db_session.add(newShare)
+        db_session.commit()
+        db_session.close()
+        msg = "0"
+        res = Response(msg)
+        res.headers["Content-Type"] = "text/plain"
+        res.headers["Charset"] = "utf-8"
+        return res
+    except Exception, e:
         print e
-        return str('-1')
+        msg = "-1"
+        res = Response(msg)
+        res.headers["Content-Type"] = "text/plain"
+        res.headers["Charset"] = "utf-8"
+        return res
