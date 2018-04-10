@@ -126,6 +126,14 @@ def getDesignList(authorId):
     print json.dumps(foodJsonList)
     return json.dumps(foodJsonList)
 
+@aboutCookbook.route("/getFavoList<authorId>")
+def getFavoList(authorId):
+    foodList = db_session.query(food).filter(foodStar.foodId == food.foodId, foodStar.userId == authorId).all()
+    foodJsonList = []
+    for f in foodList:
+        foodJsonList.append(food2json(f))
+    print json.dumps(foodJsonList)
+    return json.dumps(foodJsonList)
 @aboutCookbook.route("/getFoodList<typeId>")
 def getFoodList(typeId):
     foodList = db_session.query(food).filter(food.foodTypeId == typeId).all()
@@ -154,7 +162,7 @@ def getStarCount(foodId):
 @aboutCookbook.route("/starStatus<foodId>/<userId>",methods=['GET'])
 def starStatus(foodId,userId):
     try:
-        status = db_session.query(foodStar).filter(foodStar.userId == userId and foodStar.foodId == foodId).first()
+        status = db_session.query(foodStar).filter(foodStar.userId == userId, foodStar.foodId == foodId).first()
         if status == None:
             print 0
             return "0"
@@ -168,7 +176,7 @@ def starStatus(foodId,userId):
 @aboutCookbook.route("/starOrCancel<foodId>/<userId>")
 def starOrCancel(foodId,userId):
     try:
-        status = db_session.query(foodStar).filter(foodStar.userId == userId and foodStar.foodId == foodId).first()
+        status = db_session.query(foodStar).filter(foodStar.userId == userId, foodStar.foodId == foodId).first()
         if status == None:
             fs = foodStar(userId,foodId)
             db_session.add(fs)
