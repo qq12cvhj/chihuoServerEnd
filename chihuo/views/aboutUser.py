@@ -74,11 +74,11 @@ def share2json(s):
     shareAuthor = db_session.query(user).filter(user.userId == s.shareAuthorId).first().nickName
     print s.shareDetail
     #使用正则表达式获取内容中第一个图片的地址.如果没有图片,默认使用程序图标作为分享的缩略图
-    imgSrcList = re.findall(r"src=\"(.*?)\">", s.shareDetail)
+    imgSrcList = re.findall(r"src=\"(.*?)\.jpg", s.shareDetail)
     if imgSrcList == []:
         imgsrc = "http://192.168.1.101:5000/static/imgsUpload/chihuo.png"
     else:
-        imgsrc = imgSrcList[0]
+        imgsrc = imgSrcList[0]+".jpg"
     return {
         "shareId": s.shareId,
         "shareTitle": s.shareTitle,
@@ -100,3 +100,10 @@ def getShareInfoList(authorId):
         shareJsonList.append(share2json(s))
     print json.dumps(shareJsonList)
     return json.dumps(shareJsonList)
+
+@aboutUser.route("/getShareInfo<shareId>")
+def getShareInfo(shareId):
+    shareInfo = db_session.query(share).filter(share.shareId == shareId).first()
+    authorId = shareInfo.shareAuthorId
+    authorName = db_session.query(user).filter(user.userId == authorId).first().nickName
+    return render_template('shareInfoShow.html',shareInfo=shareInfo,authorName=authorName)

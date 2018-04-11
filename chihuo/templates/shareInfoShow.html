@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Title</title>
+</head>
+    <style >
+        #contentshow img{
+			width: 100%;
+			height: auto;
+			box-sizing: border-box;
+		}
+    </style>
+<body>
+
+    <div class="page-header" >
+        <h1>
+            &nbsp;{{ shareInfo.shareTitle }}
+        </h1>
+        <h6 style="color: steelblue;">
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ authorName }}
+        </h6>
+        <h6>
+            &nbsp;&nbsp;&nbsp;&nbsp;{{ shareInfo.pubTime}}
+        </h6>
+    </div>
+    <div class="panel-body" id="contentshow">
+        {#下面这个safe是放置flask jinja2自动转义字符#}
+    {{ shareInfo.shareDetail | safe }}
+    </div>
+
+
+</body>
+</html>
