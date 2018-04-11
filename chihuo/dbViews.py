@@ -81,12 +81,14 @@ class foodStarView(ModelView):
 class shareView(ModelView):
     column_list = (
         'shareId',
+        'shareTitle',
         'shareAuthorId',
         'shareDetail',
         'pubTime'
     )
     column_labels = {
         'shareId':u'分享ID',
+        'shareTitle':u'分享标题',
         'shareAuthorId':u'作者ID',
         'shareDetail':u'分享详情',
         'pubTime':u'发表时间'

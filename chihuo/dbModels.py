@@ -63,11 +63,13 @@ class share(Base):
     __tablename__ = 'share'
 
     shareId = Column(Integer,primary_key=True)
-    shareAuthorId = Column(Integer,nullable=False)
+    shareTitle = Column(String(16), nullable=False)
+    shareAuthorId = Column(Integer, nullable=False)
     shareDetail = Column(LONGTEXT)
     pubTime = Column(DateTime,nullable=False)
 
-    def __init__(self,authotid=None,detail=None,pubtime=None):
+    def __init__(self, authotid=None,detail=None, pubtime=None, title=None):
         self.shareAuthorId = authotid
         self.shareDetail = detail
         self.pubTime = pubtime
+        self.shareTitle = title
