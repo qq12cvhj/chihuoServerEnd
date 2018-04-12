@@ -2,6 +2,7 @@
 import os, re
 
 import datetime
+from chihuo.views import SERVER_IP
 from flask import Blueprint, request, jsonify, render_template, json, Response
 from aboutCookbook import getRandFilename
 from ..dbConnect import db_session
@@ -30,7 +31,7 @@ def uploadImg():
             file.save(os.path.join('chihuo/static/imgsUpload/', filename))
             jsonInfo = {
                 "status": 1,
-                "url": "http://192.168.1.101:5000/static/imgsUpload/" + filename + ""
+                "url": SERVER_IP + "static/imgsUpload/" + filename + ""
             }
             return jsonify(jsonInfo)
         except Exception, e:
@@ -88,7 +89,7 @@ def share2json(s):
     # 使用正则表达式获取内容中第一个图片的地址.如果没有图片,默认使用程序图标作为分享的缩略图
     imgSrcList = re.findall(r"src=\"(.*?)\.jpg", s.shareDetail)
     if imgSrcList == []:
-        imgsrc = "http://192.168.1.101:5000/static/imgsUpload/chihuo.png"
+        imgsrc = SERVER_IP + "static/imgsUpload/chihuo.png"
     else:
         imgsrc = imgSrcList[0] + ".jpg"
     return {
