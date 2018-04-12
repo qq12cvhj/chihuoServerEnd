@@ -45,6 +45,7 @@ def getActionList():
     aJsonList = []
     try:
         actionList = db_session.query(action).all()
+        actionList.sort(key=lambda x: x.actionTime, reverse=True)
         for a in actionList:
             aJsonList.append(action2json(a))
     except Exception, e:
