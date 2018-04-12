@@ -1,5 +1,5 @@
 #coding:utf-8
-from sqlalchemy import Column, String, Integer, DateTime
+from sqlalchemy import Column, String, Integer, DateTime,SmallInteger
 from sqlalchemy.dialects.mysql import LONGTEXT
 from chihuo.dbConnect import Base
 
@@ -73,3 +73,28 @@ class share(Base):
         self.shareDetail = detail
         self.pubTime = pubtime
         self.shareTitle = title
+
+class action(Base):
+    __tablename__ = 'action'
+
+    actionId = Column(Integer, primary_key=True)
+    """
+    Type不同的数字表示:
+            1:创建菜品
+            2:发表分享
+            3:收藏菜品
+            4:....
+    """
+    actionType = Column(SmallInteger, nullable=False)
+    #主语
+    subjectId = Column(Integer, nullable=False)
+    #宾语
+    objectId = Column(Integer, nullable=False)
+    #时间
+    actionTime = Column(DateTime, nullable=False)
+
+    def __init__(self,type=None, sid=None, oid=None, atime=None):
+        self.actionType = type
+        self.subjectId = sid
+        self.objectId = oid
+        self.actionTime = atime

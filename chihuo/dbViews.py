@@ -48,6 +48,7 @@ class foodView(ModelView):
     def __init__(self, modelType, session, **kwargs):
         super(foodView, self).__init__(modelType, session, **kwargs)
 
+
 class foodTypeView(ModelView):
     column_list = (
         'foodTypeId',
@@ -55,13 +56,14 @@ class foodTypeView(ModelView):
         'foodTypeDesc'
     )
     column_labels = {
-        'foodTypeId':u'菜系ID',
-        'foodTypeName':u'菜系名称',
-        'foodTypeDesc':u'菜系介绍'
+        'foodTypeId': u'菜系ID',
+        'foodTypeName': u'菜系名称',
+        'foodTypeDesc': u'菜系介绍'
     }
 
-    def __init__(self,modelType,session,**kwargs):
+    def __init__(self, modelType, session, **kwargs):
         super(foodTypeView, self).__init__(modelType, session, **kwargs)
+
 
 class foodStarView(ModelView):
     column_list = (
@@ -70,13 +72,14 @@ class foodStarView(ModelView):
         'userId'
     )
     column_labels = {
-        'foodStarId':u'点赞ID',
-        'foodId':u'菜品ID',
-        'userId':u'用户ID'
+        'foodStarId': u'点赞ID',
+        'foodId': u'菜品ID',
+        'userId': u'用户ID'
     }
 
-    def __init__(self,modelType,session,**kwargs):
+    def __init__(self, modelType, session, **kwargs):
         super(foodStarView, self).__init__(modelType, session, **kwargs)
+
 
 class shareView(ModelView):
     column_list = (
@@ -87,11 +90,32 @@ class shareView(ModelView):
         'pubTime'
     )
     column_labels = {
-        'shareId':u'分享ID',
-        'shareTitle':u'分享标题',
-        'shareAuthorId':u'作者ID',
-        'shareDetail':u'分享详情',
-        'pubTime':u'发表时间'
+        'shareId': u'分享ID',
+        'shareTitle': u'分享标题',
+        'shareAuthorId': u'作者ID',
+        'shareDetail': u'分享详情',
+        'pubTime': u'发表时间'
     }
-    def __init__(self,modelType,session,**kwargs):
+
+    def __init__(self, modelType, session, **kwargs):
         super(shareView, self).__init__(modelType, session, **kwargs)
+
+
+class actionView(ModelView):
+    column_list = (
+        'actionId',
+        'actionType',
+        'subjectId',
+        'objectId',
+        'actionTime'
+    )
+    column_labels = {
+        'actionId': '动态Id',
+        'actionType': '动态类型',
+        'subjectId': '主语Id',
+        'objectId': '宾语Id',
+        'actionTime': '动态时间'
+    }
+
+    def __init__(self, modelType, session, **kwargs):
+        super(actionView, self).__init__(modelType, session, **kwargs)
