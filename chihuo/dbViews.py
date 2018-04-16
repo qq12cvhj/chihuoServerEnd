@@ -119,3 +119,19 @@ class actionView(ModelView):
 
     def __init__(self, modelType, session, **kwargs):
         super(actionView, self).__init__(modelType, session, **kwargs)
+
+
+class watchView(ModelView):
+    column_list = {
+        'watchId',
+        'userId',
+        'watchedId'
+    }
+    column_labels = {
+        'watchId': '关注Id',
+        'userId': '用户Id',
+        'watchedId': '被关注者Id'
+    }
+
+    def __init__(self, modelType, session, **kwargs):
+        super(watchView, self).__init__(modelType, session, **kwargs)

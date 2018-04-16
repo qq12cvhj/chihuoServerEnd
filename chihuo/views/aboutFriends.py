@@ -1,10 +1,23 @@
+# coding=utf-8
 import re
 from flask import Blueprint, json
 from chihuo.views import SERVER_IP
-from ..dbModels import action, user, food, share
+from ..dbModels import action, user, food, share, watch
 from ..dbConnect import db_session
 
 aboutFriends = Blueprint('aboutFriends', __name__)
+
+
+def getShrImgStr(shrId):
+    try:
+        shr = db_session.query(share).filter(share.shareId == shrId).first()
+        imgList = re.findall(r"src=\"(.*?)\.jpg", shr.shareDetail)
+        if imgList == []:
+            return str(SERVER_IP + "static/imgsUpload/chihuo.png")
+        else:
+            return str(imgList[0] + ".jpg")
+    except Exception, e:
+        return str(SERVER_IP + "static/imgsUpload/chihuo.png")
 
 
 def action2json(a):
@@ -52,3 +65,56 @@ def getActionList():
         print e
     print json.dumps(aJsonList)
     return json.dumps(aJsonList)
+
+
+@aboutFriends.route("/watchStatus<watchedId>/<userId>")
+def watchStatus(watchedId, userId):
+    try:
+        status = db_session.query(watch).filter(watch.watchedId == watchedId, watch.userId == userId).first()
+        if status == None:
+            return "0"
+        else:
+            return "1"
+    except Exception, e:
+        print e
+        return "0"
+
+@aboutFriends.route("/watchOrCancel<watchedId>/<userId>")
+def watchOrCancel(watchedId,userId):
+    try:
+        status = db_session.query(watch).filter(watch.watchedId == watchedId, watch.userId == userId).first()
+        if status == None:
+            newwatch = watch(watchedId,userId)
+            db_session.add(newwatch)
+            db_session.commit()
+            db_session.close()
+            print "watch"
+        else:
+            try:
+                db_session.delete(status)
+                db_session.commit()
+                db_session.close()
+                print "cancel"
+            except Exception, e1:
+                print e1
+    except Exception, e2:
+        print e2
+    return ""
+
+@aboutFriends.route("/getimgs/<userId>")
+def getimgs(userId):
+    imglist = []
+    try:
+        shrlist = db_session.query(share).filter(share.shareAuthorId == userId).all()
+        if len(shrlist) > 3:
+            shrlist = shrlist[1: 3]
+        for s in shrlist:
+            imglist.append(
+                {
+                    "imgid": s.shareId,
+                    "imgstr": getShrImgStr(s.shareId)
+                })
+    except Exception, e:
+        print e
+    print json.dumps(imglist)
+    return json.dumps(imglist)

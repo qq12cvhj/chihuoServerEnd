@@ -10,7 +10,14 @@
     <div class="panel panel-primary">
     <div class="panel-heading" align="center">
         <h2 class="panel-title" >{{ foodInfo.foodName }}</h2>
-        <h6>作者：{{ authorName }}</h6>
+        <h6 onclick="callJs2And({{ foodInfo.foodAuthorId }})">
+            作者：{{ authorName }}
+        </h6>
+        <script >
+            function callJs2And(authorId){
+                document.location = "js://webview?userId="+authorId+"&nickName={{ authorName }}";
+            }
+        </script>
     </div>
     <div class="panel-body">
         {#下面这个safe是放置flask jinja2自动转义字符#}
