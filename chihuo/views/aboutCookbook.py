@@ -4,6 +4,8 @@ import os
 import datetime
 import random
 from flask import Blueprint, render_template, request, Response, json, jsonify
+
+from chihuo.views import SERVER_IP
 from ..dbModels import food, user, foodType, foodStar,action
 from ..dbConnect import db_session
 from sqlalchemy import func
@@ -15,7 +17,7 @@ aboutCookbook = Blueprint('aboutCookbook', __name__)
 @aboutCookbook.route('/editCookbook', methods=['GET'])
 def editCookbook():
     foodTypeList = getFoodTypeLIst()
-    return render_template('cookbookEdit.html', title='编辑菜谱', foodTypeList=foodTypeList)
+    return render_template('cookbookEdit.html', title='编辑菜谱', foodTypeList=foodTypeList, serverip = SERVER_IP)
 
 
 def getRandFilename():
