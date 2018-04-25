@@ -19,8 +19,13 @@
         <h1>
             &nbsp;{{ shareInfo.shareTitle }}
         </h1>
-        <h6 style="color: steelblue;">
+        <h6 style="color: steelblue;" onclick="callJs2And({{ shareInfo.shareAuthorId }})">
             &nbsp;&nbsp;&nbsp;&nbsp;{{ authorName }}
+            <script >
+            function callJs2And(authorId){
+                document.location = "js://webview?userId="+authorId+"&nickName={{ authorName }}";
+            }
+        </script>
         </h6>
         <h6>
             &nbsp;&nbsp;&nbsp;&nbsp;{{ shareInfo.pubTime}}

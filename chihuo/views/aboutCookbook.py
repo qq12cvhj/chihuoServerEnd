@@ -3,10 +3,12 @@ import os
 
 import datetime
 import random
+
+import re
 from flask import Blueprint, render_template, request, Response, json, jsonify
 
 from chihuo.views import SERVER_IP
-from ..dbModels import food, user, foodType, foodStar,action
+from ..dbModels import food, user, foodType, foodStar, action
 from ..dbConnect import db_session
 from sqlalchemy import func
 
@@ -17,7 +19,7 @@ aboutCookbook = Blueprint('aboutCookbook', __name__)
 @aboutCookbook.route('/editCookbook', methods=['GET'])
 def editCookbook():
     foodTypeList = getFoodTypeLIst()
-    return render_template('cookbookEdit.html', title='编辑菜谱', foodTypeList=foodTypeList, serverip = SERVER_IP)
+    return render_template('cookbookEdit.html', title='编辑菜谱', foodTypeList=foodTypeList, serverip=SERVER_IP)
 
 
 def getRandFilename():
@@ -82,7 +84,7 @@ def createNewFood():
         return "<script>alert('创建成功，请返回上一层');</script>"
     except Exception, e:
         print e
-        return "<script>alert("+e+");</script>"
+        return "<script>alert(" + e + ");</script>"
 
 
 @aboutCookbook.route("/getFoodInfo<foodId>")
@@ -114,6 +116,14 @@ def addNewFoodType():
         return "-1"
 
 
+def getfoodCoverimg(f):
+    imgList = re.findall(r"/imgsUpload/(.*?)\.jpg", f.foodDetail)
+    if imgList == []:
+        return SERVER_IP + "static/imgsUpload/chihuo.png"
+    else:
+        return SERVER_IP + "static/imgsUpload/" + imgList[0] + ".jpg"
+
+
 def foodtype2json(ft):
     return {
         "foodTypeId": ft.foodTypeId,
@@ -127,9 +137,20 @@ def food2json(f):
     return {
         "foodId": f.foodId,
         "foodAuthor": foodAuthor,
-        "foodName": f.foodName
+        "foodName": f.foodName,
+        "foodAuthorId": f.foodAuthorId,
+        "foodImgSrc": getfoodCoverimg(f)
     }
 
+@aboutCookbook.route("/getNewFoodList")
+def getNewFoodList():
+    foodlist = db_session.query(food).limit(10).all()
+    foodlist.sort(key=lambda x: x.foodId, reverse=True)
+    foodJsonList = []
+    for f in foodlist:
+        foodJsonList.append(food2json(f))
+    print json.dumps(foodJsonList)
+    return json.dumps(foodJsonList)
 
 @aboutCookbook.route("/getDesignList<authorId>")
 def getDesignList(authorId):
@@ -173,6 +194,8 @@ def foodTypeList():
 
 
 aboutCookbook.route("/getStarCount<foodId>", methods=['GET'])
+
+
 def getStarCount(foodId):
     return None
 
@@ -208,8 +231,8 @@ def starOrCancel(foodId, userId):
             return "1"
         else:
             try:
-                delaction = db_session.query(action)\
-                    .filter(action.subjectId == userId, action.objectId == foodId, action.actionType == 3)\
+                delaction = db_session.query(action) \
+                    .filter(action.subjectId == userId, action.objectId == foodId, action.actionType == 3) \
                     .first()
                 db_session.delete(delaction)
             except Exception, e1:
