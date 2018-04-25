@@ -13,6 +13,27 @@ datetimeRegx = '%Y-%m-%d %H:%M:%S'
 
 aboutUser = Blueprint('aboutUser', __name__)
 
+@aboutUser.route("/uploadVideo",methods=['POST'])
+def uploadVideo():
+    try:
+        file = request.files['video']
+        fn = getRandFilename()
+        tn = os.path.splitext(file.filename)[1]
+        fullFileName = fn + tn
+        print fullFileName + "即将保存"
+        if not os.path.isdir('chihuo/static/videosUpload/'):
+            os.mkdir('chihuo/static/videosUpload')
+        file.save(os.path.join('chihuo/static/videosUpload/', fullFileName))
+        msg = SERVER_IP+"static/videosUpload/"+fullFileName
+    except Exception, e:
+        print e
+        msg = "err"
+    res = Response(msg)
+    res.headers["Content-Type"] = "text/plain"
+    res.headers["Charset"] = "utf-8"
+    res.headers["Access-Control-Allow-Origin"] = "*"
+    return res
+
 
 @aboutUser.route("/uploadImage", methods=['POST'])
 def uploadImg():
@@ -44,7 +65,7 @@ def uploadImg():
 
 @aboutUser.route("/shareEdit", methods=['GET'])
 def shareEdit():
-    return render_template('shareEdit.html')
+    return render_template('shareEdit.html', serverip=SERVER_IP)
 
 
 @aboutUser.route("/pubShare", methods=['POST'])
@@ -99,7 +120,19 @@ def share2json(s):
         "pubTimeStr": str(s.pubTime),
         "shareTitleImg": imgsrc
     }
-
+#猜你喜欢部分的网络请求返回结果
+@aboutUser.route('/getGuessList')
+def getGuessList():
+    try:
+        shareInfoList = db_session.query(share).order_by(func.rand()).limit(10).all()
+    except Exception, e:
+        print e
+        shareInfoList = []
+    shareJsonList = []
+    for s in shareInfoList:
+        shareJsonList.append(share2json(s))
+        print json.dumps(shareJsonList)
+        return json.dumps(shareJsonList)
 
 @aboutUser.route('/getShareInfoList<authorId>')
 def getShareInfoList(authorId):

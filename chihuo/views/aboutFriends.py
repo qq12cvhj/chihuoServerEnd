@@ -1,5 +1,7 @@
 # coding=utf-8
 import re
+from operator import or_
+
 from flask import Blueprint, json
 from chihuo.views import SERVER_IP
 from ..dbModels import action, user, food, share, watch
@@ -53,6 +55,19 @@ def action2json(a):
     }
 
 
+@aboutFriends.route("/getHomeActionList")
+def getHomeActionList():
+    aJsonList = []
+    try:
+        actionList = db_session.query(action).filter(or_(action.actionType == 1, action.actionType == 2)).limit(5).all()
+        actionList.sort(key=lambda x: x.actionTime, reverse=True)
+        for a in actionList:
+            aJsonList.append(action2json(a))
+    except Exception, e:
+        print e
+    print json.dumps(aJsonList)
+    return json.dumps(aJsonList)
+
 @aboutFriends.route("/getActionList")
 def getActionList():
     aJsonList = []
@@ -65,7 +80,6 @@ def getActionList():
         print e
     print json.dumps(aJsonList)
     return json.dumps(aJsonList)
-
 
 @aboutFriends.route("/watchStatus<watchedId>/<userId>")
 def watchStatus(watchedId, userId):

@@ -139,8 +139,10 @@ def food2json(f):
         "foodAuthor": foodAuthor,
         "foodName": f.foodName,
         "foodAuthorId": f.foodAuthorId,
-        "foodImgSrc": getfoodCoverimg(f)
+        "foodImgSrc": getfoodCoverimg(f),
+        "starCount": f.starCount
     }
+
 
 @aboutCookbook.route("/getNewFoodList")
 def getNewFoodList():
@@ -151,6 +153,18 @@ def getNewFoodList():
         foodJsonList.append(food2json(f))
     print json.dumps(foodJsonList)
     return json.dumps(foodJsonList)
+
+
+@aboutCookbook.route("/getHotFoodList")
+def getHotFoodList():
+    foodlist = db_session.query(food).limit(10).all()
+    foodlist.sort(key=lambda x: x.starCount, reverse=True)
+    foodJsonList = []
+    for f in foodlist:
+        foodJsonList.append(food2json(f))
+    print json.dumps(foodJsonList)
+    return json.dumps(foodJsonList)
+
 
 @aboutCookbook.route("/getDesignList<authorId>")
 def getDesignList(authorId):
@@ -223,6 +237,7 @@ def starOrCancel(foodId, userId):
             fs = foodStar(userId, foodId)
             actiontime = datetime.datetime.now().strftime(datetimeRegx)
             newaction = action(3, userId, foodId, actiontime)
+            db_session.query(food).filter(food.foodId == foodId).update({food.starCount: food.starCount + 1})
             db_session.add(fs)
             db_session.add(newaction)
             db_session.commit()
@@ -231,6 +246,7 @@ def starOrCancel(foodId, userId):
             return "1"
         else:
             try:
+                db_session.query(food).filter(food.foodId == foodId).update({food.starCount: food.starCount - 1})
                 delaction = db_session.query(action) \
                     .filter(action.subjectId == userId, action.objectId == foodId, action.actionType == 3) \
                     .first()

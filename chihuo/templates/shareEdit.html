@@ -15,7 +15,7 @@
 			padding: 10px;
     		color: #444;
 		}
-        #contentEditor img{
+        #contentEditor img,video{
 			width: 100%;
 			height: auto;
 			box-sizing: border-box;
@@ -39,25 +39,96 @@
              <input type="hidden" name="shareAuthorIdInput" id="shareAuthorIdInput">
              <input name="shareDetailInput" id="shareDetailInput" type="hidden"/>
         </form>
+		<div style="color: #FF4040" >注意：上传图片时请勿选择视频,上传视频时请勿选择图片，否则将无法显示。</div>
         <br/>
         <hr style="height:10px;color: #111111"  />
+        <input type="file"
+               name="filechoose"
+               id="filechoose"
+               onchange="upload(this)"
+               onclick="clickInput()"
+               style="display: none;"
+               accept="video/mp4,video/mpeg,video/mpg,audio/ogg"
+               />
         <div class="form-group">
             <!-- 内容编辑区域 -->
             <div id="article-body">
-
             </div>
+
             <script>
+                var now;
                 /*实例化一个编辑器*/
                 var artEditor = new Eleditor({
-                                        el: '#article-body',
-                                        upload:{
-                                            server: '/uploadImage',
-                                            fileSizeLimit: 5,
-                                            formName:"image",
-                                            compress:null
-                                        },
-                                        placeHolder:"在这里分享你的心得吧！"
-                                    });
+								el: '#article-body',
+								upload:{
+									server: '/uploadImage',
+									fileSizeLimit: 5,
+									formName:"image",
+									compress:null
+								},
+								toolbars: [
+								  'insertText',
+								  'editText',
+								  'insertImage',
+								  //上传视频对象按钮
+								  {
+									  id: 'insertVideo',//不能重复，此id可用于定义按钮样式，例如创建后按钮类为Eleditor-insertShop
+									  //tag: 'img', //指定标签显示按钮，逗号分隔，默认不指定
+									  name: '插视频',
+									  handle: function(_select, _controll){
+										now = artEditor.getEditNode();
+										clickInput();
+									  }
+								  },
+								  'insertLink',
+								  'insertHr',
+								  'delete',
+								  'undo',
+								  'cancel'
+								],
+								placeHolder:"在这里分享你的心得吧！"
+								});
+				function clickInput() {
+					return document.getElementById('filechoose').click();
+				}
+				function upload(e) {
+					var file = e.files[0];
+					handleUpload(file,afterOnchange());
+				}
+				function handleUpload(d,callback) {
+					formdata = new FormData();
+					formdata.append("video",d);
+					alert("调用后文件名为"+d.name);
+					$.ajax({
+						   url:'{{ serverip }}uploadVideo',
+						   type:'POST',
+						   data:formdata,
+						   async:false,
+						   cache: false,
+						   processData: false,// 告诉jQuery不要去处理发送的数据
+						   contentType: false,
+						   success:function (msg) {
+							   if(msg==="err"){
+							       alert('出了点错误，视频上传失败。');
+							   }else{
+							        //artEditor.saveState();
+							   alert(msg);
+							   now.after($('<video src="'+msg+'" controls="controls">'+'</video>'));
+							   var file = document.getElementById('filechoose');
+							   file.value = '';
+							   file.outerHTML = file.outerHTML;
+							   }
+						   },
+						   error:function () {
+								alert('出了点错误，视频上传失败。');
+						   }
+
+					});
+
+				}
+				function afterOnchange() {
+				//这里写调用前的逻辑。先不管了。
+				}
             </script>
         </div>
 	</div>
