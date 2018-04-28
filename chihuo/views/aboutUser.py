@@ -13,18 +13,22 @@ datetimeRegx = '%Y-%m-%d %H:%M:%S'
 
 aboutUser = Blueprint('aboutUser', __name__)
 
-@aboutUser.route("/uploadVideo",methods=['POST'])
+
+@aboutUser.route("/uploadVideo", methods=['POST'])
 def uploadVideo():
     try:
         file = request.files['video']
         fn = getRandFilename()
         tn = os.path.splitext(file.filename)[1]
+        print tn
         fullFileName = fn + tn
-        print fullFileName + "即将保存"
         if not os.path.isdir('chihuo/static/videosUpload/'):
             os.mkdir('chihuo/static/videosUpload')
-        file.save(os.path.join('chihuo/static/videosUpload/', fullFileName))
-        msg = SERVER_IP+"static/videosUpload/"+fullFileName
+        if (tn == ".mp4") or (tn == ".mpeg") or (tn == ".ogg"):
+            file.save(os.path.join('chihuo/static/videosUpload/', fullFileName))
+            msg = SERVER_IP + "static/videosUpload/" + fullFileName
+        else:
+            msg = "err"
     except Exception, e:
         print e
         msg = "err"
@@ -38,10 +42,15 @@ def uploadVideo():
 @aboutUser.route("/uploadImage", methods=['POST'])
 def uploadImg():
     file = request.files['image']
-    if file == None:
+    print file.filename
+    print os.path.splitext(file.filename)[1]
+    if file is None or \
+            (os.path.splitext(file.filename)[1] != ".jpg"
+             and os.path.splitext(file.filename)[1] != ".gif"
+             and os.path.splitext(file.filename)[1] != ".png"):
         jsonInfo = {
             "status": 0,
-            "msg": "上传失败"
+            "msg": "上传失败,请确保你上传的是图片文件jpg/gif"
         }
         return jsonify(jsonInfo)
     else:
@@ -120,7 +129,9 @@ def share2json(s):
         "pubTimeStr": str(s.pubTime),
         "shareTitleImg": imgsrc
     }
-#猜你喜欢部分的网络请求返回结果
+
+
+# 猜你喜欢部分的网络请求返回结果
 @aboutUser.route('/getGuessList')
 def getGuessList():
     try:
@@ -133,6 +144,7 @@ def getGuessList():
         shareJsonList.append(share2json(s))
         print json.dumps(shareJsonList)
         return json.dumps(shareJsonList)
+
 
 @aboutUser.route('/getShareInfoList<authorId>')
 def getShareInfoList(authorId):

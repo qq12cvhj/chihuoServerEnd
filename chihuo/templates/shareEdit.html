@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <title>Title</title>
+     <link href="http://vjs.zencdn.net/6.6.3/video-js.css" rel="stylesheet">
+	<title>Title</title>
 </head>
     <style>
 		*{margin: 0;padding: 0;}
@@ -27,6 +28,8 @@
     <script src="/static/eleditor/webuploader.js"></script>
     <!-- 插件核心 -->
     <script src="/static/eleditor/Eleditor.js"></script>
+
+	<script src="http://vjs.zencdn.net/6.6.3/video.js"></script>
 
 
 
@@ -97,7 +100,7 @@
 				function handleUpload(d,callback) {
 					formdata = new FormData();
 					formdata.append("video",d);
-					alert("调用后文件名为"+d.name);
+					alert("上传的文件名为："+d.name);
 					$.ajax({
 						   url:'{{ serverip }}uploadVideo',
 						   type:'POST',
@@ -108,18 +111,22 @@
 						   contentType: false,
 						   success:function (msg) {
 							   if(msg==="err"){
-							       alert('出了点错误，视频上传失败。');
+							       alert('失败.请确保你上传是视频文件(mp4/ogg/mpeg)');
 							   }else{
 							        //artEditor.saveState();
 							   alert(msg);
-							   now.after($('<video src="'+msg+'" controls="controls">'+'</video>'));
+							   now.after(
+							       $(
+							           '<video src="'+msg+'" controls="controls">'+'</video>'
+								   )
+							   );
 							   var file = document.getElementById('filechoose');
 							   file.value = '';
 							   file.outerHTML = file.outerHTML;
 							   }
 						   },
 						   error:function () {
-								alert('出了点错误，视频上传失败。');
+								alert('出了点错误，视频上传失败,请确保你上传的文件为视频文件。');
 						   }
 
 					});
