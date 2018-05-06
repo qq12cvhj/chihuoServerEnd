@@ -142,8 +142,8 @@ def getGuessList():
     shareJsonList = []
     for s in shareInfoList:
         shareJsonList.append(share2json(s))
-        print json.dumps(shareJsonList)
-        return json.dumps(shareJsonList)
+    print json.dumps(shareJsonList)
+    return json.dumps(shareJsonList)
 
 
 @aboutUser.route('/getShareInfoList<authorId>')
