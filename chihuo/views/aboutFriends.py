@@ -13,7 +13,7 @@ aboutFriends = Blueprint('aboutFriends', __name__)
 def getShrImgStr(shrId):
     try:
         shr = db_session.query(share).filter(share.shareId == shrId).first()
-        imgList = re.findall(r"src=\"(.*?)\.jpg", shr.shareDetail)
+        imgList = re.findall(r"<img src=\"(.*?)\.jpg", shr.shareDetail)
         if imgList == []:
             return str(SERVER_IP + "static/imgsUpload/chihuo.png")
         else:
@@ -39,7 +39,7 @@ def action2json(a):
         actionob = db_session.query(share).filter(share.shareId == a.objectId).first()
         objectName = actionob.shareTitle
         objectId = actionob.shareId
-        imgList = re.findall(r"src=\"(.*?)\.jpg", actionob.shareDetail)
+        imgList = re.findall(r"<img src=\"(.*?)\.jpg", actionob.shareDetail)
         if imgList == []:
             titleImg = SERVER_IP + "static/imgsUpload/chihuo.png"
         else:

@@ -117,7 +117,7 @@ def share2json(s):
     shareAuthor = db_session.query(user).filter(user.userId == s.shareAuthorId).first().nickName
     print s.shareDetail
     # 使用正则表达式获取内容中第一个图片的地址.如果没有图片,默认使用程序图标作为分享的缩略图
-    imgSrcList = re.findall(r"src=\"(.*?)\.jpg", s.shareDetail)
+    imgSrcList = re.findall(r"<img src=\"(.*?)\.jpg", s.shareDetail)
     if imgSrcList == []:
         imgsrc = SERVER_IP + "static/imgsUpload/chihuo.png"
     else:
