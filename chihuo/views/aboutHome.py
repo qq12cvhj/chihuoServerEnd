@@ -1,7 +1,7 @@
 from operator import or_
 
 import re
-from flask import Blueprint, json
+from flask import Blueprint, json,render_template
 
 from chihuo.views import SERVER_IP
 from ..dbModels import user, action, food, share
@@ -9,6 +9,10 @@ from ..dbConnect import db_session
 
 aboutHome = Blueprint('aboutHome', __name__)
 
+
+@aboutHome.route("/")
+def index():
+    return render_template('index.html')
 
 @aboutHome.route("/getHotUserList", methods=['GET'])
 def getHotUserList():
