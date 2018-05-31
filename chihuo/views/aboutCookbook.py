@@ -87,15 +87,17 @@ def createNewFood():
         return "<script>alert(" + e + ");</script>"
 
 
+
 @aboutCookbook.route("/getFoodInfo<foodId>")
 def getfoodInfo(foodId):
-    foodInfos = db_session.query(food).filter(food.foodId == foodId).all()
-    if foodInfos == []:
+    foodInfo = db_session.query(food).filter(food.foodId == foodId).first()
+    if foodInfo == None:
         return "<script>alert('请求失败,请重试');</script>"
     else:
-        foodInfo = foodInfos[0]
         authorId = foodInfo.foodAuthorId
-        authorName = db_session.query(user).filter(user.userId == authorId).all()[0].nickName
+        authorName = db_session.query(user).filter(user.userId == authorId).first().nickName
+        foodInfo.hotIndex += 10
+        db_session.commit()
         return render_template('foodInfoShow.html', foodInfo=foodInfo, authorName=authorName)
 
 

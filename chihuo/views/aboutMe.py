@@ -32,8 +32,8 @@ def reg():
     nickname = request.form['nickname']
     users_username = db_session.query(user).filter(user.userName == username).all()
     users_nickname = db_session.query(user).filter(user.nickName == nickname).all()
-    if users_username == []:
-        if users_nickname == []:
+    if not users_username:
+        if not users_nickname:
             try:
                 newUser = user(username, password, nickname)
                 db_session.add(newUser)

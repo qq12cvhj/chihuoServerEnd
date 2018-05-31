@@ -1,5 +1,5 @@
 # coding:utf-8
-from sqlalchemy import Column, String, Integer, DateTime, SmallInteger
+from sqlalchemy import Column, String, Integer, DateTime, SmallInteger, ForeignKey
 from sqlalchemy.dialects.mysql import LONGTEXT
 from chihuo.dbConnect import Base
 
@@ -35,12 +35,14 @@ class food(Base):
     foodTypeId = Column(Integer)
     foodDetail = Column(LONGTEXT)
     starCount = Column(Integer, default=0)
+    hotIndex = Column(Integer, default=0)
 
-    def __init__(self, name=None, authorId=None, typeId=None, detail=None):
+    def __init__(self, name=None, authorId=None, typeId=None, detail=None, hotindex=None):
         self.foodName = name
         self.foodAuthorId = authorId
         self.foodTypeId = typeId
         self.foodDetail = detail
+        self.hotIndex = hotindex
 
 
 class foodType(Base):
@@ -75,12 +77,27 @@ class share(Base):
     shareAuthorId = Column(Integer, nullable=False)
     shareDetail = Column(LONGTEXT)
     pubTime = Column(DateTime, nullable=False)
+    hotIndex = Column(Integer, default=0)
+    typeName = Column(String(16),  nullable=True)
 
-    def __init__(self, authotid=None, detail=None, pubtime=None, title=None):
+    def __init__(self, authotid=None, detail=None, pubtime=None, title=None, hotindex=None, type=None):
         self.shareAuthorId = authotid
         self.shareDetail = detail
         self.pubTime = pubtime
         self.shareTitle = title
+        self.hotIndex = hotindex
+        self.typeName = type
+
+
+class shareType(Base):
+    __tablename__ = 'shareType'
+
+    typeId = Column(Integer, primary_key=True)
+    typeName = Column(String(16), nullable=False, unique=True)
+
+    def __init__(self, id=None, name=None):
+        self.typeId = id
+        self.typeName = name
 
 
 class action(Base):

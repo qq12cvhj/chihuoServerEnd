@@ -1,2 +1,2 @@
 # coding=utf-8
-SERVER_IP = "http://www.qq12cvhj.cn:5000/"
+SERVER_IP = "http://192.168.1.101:5000/"

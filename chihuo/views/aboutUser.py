@@ -164,6 +164,11 @@ def getShareInfoList(authorId):
 @aboutUser.route("/getShareInfo<shareId>")
 def getShareInfo(shareId):
     shareInfo = db_session.query(share).filter(share.shareId == shareId).first()
-    authorId = shareInfo.shareAuthorId
-    authorName = db_session.query(user).filter(user.userId == authorId).first().nickName
-    return render_template('shareInfoShow.html', shareInfo=shareInfo, authorName=authorName)
+    if shareInfo is None:
+        pass
+    else:
+        authorId = shareInfo.shareAuthorId
+        authorName = db_session.query(user).filter(user.userId == authorId).first().nickName
+        shareInfo.hotIndex += 10
+        db_session.commit()
+        return render_template('shareInfoShow.html', shareInfo=shareInfo, authorName=authorName)

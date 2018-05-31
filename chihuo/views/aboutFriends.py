@@ -1,11 +1,12 @@
 # coding=utf-8
 import re
-from operator import or_
+from operator import or_, and_
 
 from flask import Blueprint, json
 from chihuo.views import SERVER_IP
 from ..dbModels import action, user, food, share, watch
 from ..dbConnect import db_session
+from sqlalchemy import exists
 
 aboutFriends = Blueprint('aboutFriends', __name__)
 
@@ -68,18 +69,28 @@ def getHomeActionList():
     print json.dumps(aJsonList)
     return json.dumps(aJsonList)
 
-@aboutFriends.route("/getActionList")
-def getActionList():
+
+@aboutFriends.route("/getActionList<usrid>")
+def getActionList(usrid):
     aJsonList = []
     try:
-        actionList = db_session.query(action).all()
+        actionList = []
+        watchs = db_session.query(watch).filter(watch.userId == usrid).all()
+        userIds = []
+        for w in watchs:
+            userIds.append(w.watchedId)
+        for uid in userIds:
+            actionList.extend(db_session.query(action).filter(action.subjectId == uid).all())
+        actionList.extend(db_session.query(action).filter(action.subjectId == usrid))
         actionList.sort(key=lambda x: x.actionTime, reverse=True)
         for a in actionList:
             aJsonList.append(action2json(a))
     except Exception, e:
+        aJsonList = []
         print e
-    print json.dumps(aJsonList)
+    print "动态列表为：" + json.dumps(aJsonList)
     return json.dumps(aJsonList)
+
 
 @aboutFriends.route("/watchStatus<watchedId>/<userId>")
 def watchStatus(watchedId, userId):
@@ -93,12 +104,13 @@ def watchStatus(watchedId, userId):
         print e
         return "0"
 
+
 @aboutFriends.route("/watchOrCancel<watchedId>/<userId>")
-def watchOrCancel(watchedId,userId):
+def watchOrCancel(watchedId, userId):
     try:
         status = db_session.query(watch).filter(watch.watchedId == watchedId, watch.userId == userId).first()
         if status == None:
-            newwatch = watch(watchedId,userId)
+            newwatch = watch(watchedId, userId)
             db_session.add(newwatch)
             db_session.commit()
             db_session.close()
@@ -114,6 +126,7 @@ def watchOrCancel(watchedId,userId):
     except Exception, e2:
         print e2
     return ""
+
 
 @aboutFriends.route("/getimgs/<userId>")
 def getimgs(userId):
