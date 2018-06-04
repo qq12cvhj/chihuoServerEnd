@@ -54,12 +54,14 @@ class foodTypeView(ModelView):
     column_list = (
         'foodTypeId',
         'foodTypeName',
-        'foodTypeDesc'
+        'foodTypeDesc',
+        'coverPath'
     )
     column_labels = {
         'foodTypeId': u'菜系ID',
         'foodTypeName': u'菜系名称',
-        'foodTypeDesc': u'菜系介绍'
+        'foodTypeDesc': u'菜系介绍',
+        'coverPath':u'封面路径'
     }
 
     def __init__(self, modelType, session, **kwargs):

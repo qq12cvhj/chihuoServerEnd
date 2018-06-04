@@ -87,7 +87,6 @@ def createNewFood():
         return "<script>alert(" + e + ");</script>"
 
 
-
 @aboutCookbook.route("/getFoodInfo<foodId>")
 def getfoodInfo(foodId):
     foodInfo = db_session.query(food).filter(food.foodId == foodId).first()
@@ -105,9 +104,10 @@ def getfoodInfo(foodId):
 def addNewFoodType():
     foodTypeInput = request.form['foodTypeInput']
     foodDescInput = request.form['foodDescInput']
+    foodCoverPath = request.form['foodCoverPath']
     print foodTypeInput
     print foodDescInput
-    newFoodType = foodType(foodTypeInput, foodDescInput)
+    newFoodType = foodType(foodTypeInput, foodDescInput, foodCoverPath)
     try:
         db_session.add(newFoodType)
         db_session.commit()
@@ -130,7 +130,8 @@ def foodtype2json(ft):
     return {
         "foodTypeId": ft.foodTypeId,
         "foodTypeName": ft.foodTypeName,
-        "foodTypeDesc": ft.foodTypeDesc
+        "foodTypeDesc": ft.foodTypeDesc,
+        "coverImg": ft.coverPath
     }
 
 
@@ -209,9 +210,7 @@ def foodTypeList():
     return json.dumps(typeJsonList)
 
 
-aboutCookbook.route("/getStarCount<foodId>", methods=['GET'])
-
-
+@aboutCookbook.route("/getStarCount<foodId>", methods=['GET'])
 def getStarCount(foodId):
     return None
 
@@ -263,3 +262,26 @@ def starOrCancel(foodId, userId):
     except Exception, e:
         print e
         return "-1"
+
+
+@aboutCookbook.route("/uploadCoverImg", methods=['POST'])
+def uploadCoverImg():
+    try:
+        file = request.files['coverImg']
+        print "封面名称:" + file.filename
+        fn = getRandFilename()
+        tn = os.path.splitext(file.filename)[1]
+        print tn
+        fullFileName = fn + tn
+        if not os.path.isdir('chihuo/static/imgsUpload/'):
+            os.mkdir('chihuo/static/imgsUpload')
+        file.save(os.path.join('chihuo/static/imgsUpload/', fullFileName))
+        msg = SERVER_IP + "static/imgsUpload/" + fullFileName
+    except Exception, e:
+        print e
+        msg = "封面上传失败"
+    res = Response(msg)
+    res.headers["Content-Type"] = "text/plain"
+    res.headers["Charset"] = "utf-8"
+    res.headers["Access-Control-Allow-Origin"] = "*"
+    return res

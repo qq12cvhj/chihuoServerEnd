@@ -51,10 +51,12 @@ class foodType(Base):
     foodTypeId = Column(Integer, primary_key=True)
     foodTypeName = Column(String(16), unique=True, nullable=False)
     foodTypeDesc = Column(LONGTEXT)
+    coverPath = Column(String(80), unique=False, nullable=False)
 
-    def __init__(self, name=None, desc=None):
+    def __init__(self, name=None, desc=None, path=None):
         self.foodTypeName = name
         self.foodTypeDesc = desc
+        self.coverPath = path
 
 
 class foodStar(Base):

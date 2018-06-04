@@ -6,7 +6,7 @@ from flask import Blueprint, json
 from chihuo.views import SERVER_IP
 from ..dbModels import action, user, food, share, watch
 from ..dbConnect import db_session
-from sqlalchemy import exists
+
 
 aboutFriends = Blueprint('aboutFriends', __name__)
 
